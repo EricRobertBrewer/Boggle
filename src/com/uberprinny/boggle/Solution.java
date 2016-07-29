@@ -10,13 +10,14 @@ import java.util.Scanner;
 
 public class Solution {
 
-	private static final int SIZE = 4;
+	private static final int SIZE = 5;
 	private static final int FACES = 6;
 	
 	private static final int MAX_WORD_LENGTH = 9; // optimize to throw out checking for strings past this length
 	
 	private static final int NEW_DICE = 0;
 	private static final int OLD_DICE = 1;
+	private static final int DICE_VERSION = NEW_DICE; // change to old if you want
 	private static final String[][][] DICE = {
 		{ // New edition of Boggle
 			{ "A", "A", "E", "E", "G", "N" },
@@ -96,7 +97,7 @@ public class Solution {
 		for (int i = 0; i < board.length; i++) {
 			board[i] = new String[SIZE];
 			for (int j = 0; j < board[i].length; j++) {
-				board[i][j] = DICE[NEW_DICE][dice[4 * i + j]][random.nextInt(FACES)];
+				board[i][j] = DICE[DICE_VERSION][dice[4 * i + j] % DICE[DICE_VERSION].length][random.nextInt(FACES)];
 			}
 		}
 		System.out.println();
@@ -109,8 +110,10 @@ public class Solution {
 		
 		// find words!
 		long startTime = System.currentTimeMillis();
-		List<String> allWords = getAllWords(board, dictionary);
 		System.out.println();
+		System.out.print("Finding words");
+		List<String> allWords = getAllWords(board, dictionary);
+		System.out.println(" Done!");
 		System.out.println("Time to find all words up to " + MAX_WORD_LENGTH + " letters long: " + (System.currentTimeMillis() - startTime) + "ms");
 		System.out.println("Total unique words in board: " + allWords.size());
 		for (String word : allWords) {
@@ -129,7 +132,7 @@ public class Solution {
 		}
 		for (int i = 0; i < board.length; i++) {
 			for (int j = 0; j < board[i].length; j++) {
-//				System.out.println("Start: [" + i + "," + j + "]");
+				System.out.print(".");
 				String word = "";
 				findWords(board, i, j, word, words, path, dictionary);
 			}
